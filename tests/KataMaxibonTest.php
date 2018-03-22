@@ -9,6 +9,7 @@ use LuisRovirosa\KataMaxibon\Developer;
 use LuisRovirosa\KataMaxibon\Fridge;
 use LuisRovirosa\KataMaxibon\KataMaxibon;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 
 class KataMaxibonTest extends TestCase
 {
@@ -77,6 +78,29 @@ class KataMaxibonTest extends TestCase
 
                  $expectedMessage = "Hi guys, I'm " . $name . ". We need more maxibons!";
                  $chatProphecy->sendMessage($expectedMessage)->shouldBeCalled();
+
+                 $kataMaxibon->grabMaxibons($developer);
+             });
+    }
+
+    /**
+     * @test
+     */
+    public function a_message_is_not_sent_when_there_are_more_than_two_maxibons()
+    {
+        $this->forAll(
+            Generator\names(),
+            Generator\choose(0, 7)
+        )
+             ->then(function ($name, $numberOfMaxibons) {
+                 $fridge = new Fridge();
+                 $chatProphecy = $this->prophesize(Chat::class);
+                 /** @var Chat $chat */
+                 $chat = $chatProphecy->reveal();
+                 $kataMaxibon = new KataMaxibon($fridge, $chat);
+                 $developer = new Developer($name, $numberOfMaxibons);
+
+                 $chatProphecy->sendMessage(Argument::any())->shouldNotBeCalled();
 
                  $kataMaxibon->grabMaxibons($developer);
              });
