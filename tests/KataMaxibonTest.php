@@ -28,8 +28,7 @@ class KataMaxibonTest extends TestCase
         )
              ->then(function ($name, $numberOfMaxibons) {
                  $fridge = new Fridge();
-                 $chat = new DummyChat();
-                 $kataMaxibon = new KataMaxibon($fridge, $chat);
+                 $kataMaxibon = new KataMaxibon($fridge, new DummyChat());
                  $developer = new Developer($name, $numberOfMaxibons);
 
                  $kataMaxibon->grabMaxibons($developer);
@@ -49,8 +48,7 @@ class KataMaxibonTest extends TestCase
         )
              ->then(function ($name, $numberOfMaxibons) {
                  $fridge = new Fridge();
-                 $chat = new DummyChat();
-                 $kataMaxibon = new KataMaxibon($fridge, $chat);
+                 $kataMaxibon = new KataMaxibon($fridge, new DummyChat());
                  $developer = new Developer($name, $numberOfMaxibons);
 
                  $kataMaxibon->grabMaxibons($developer);
@@ -103,6 +101,34 @@ class KataMaxibonTest extends TestCase
                  $chatProphecy->sendMessage(Argument::any())->shouldNotBeCalled();
 
                  $kataMaxibon->grabMaxibons($developer);
+             });
+    }
+
+    /**
+     * @test
+     */
+    public function the_number_of_maxibons_can_never_be_lower_than_3_when_developers_goes_in_group()
+    {
+        $this->forAll(
+            Generator\vector(
+                rand(0, 10),
+                Generator\map(
+                    function ($data) {
+                        return new Developer($data['name'], $data['numberOfMaxibons']);
+                    },
+                    Generator\associative([
+                        'name'             => Generator\names(),
+                        'numberOfMaxibons' => Generator\choose(0, 7)
+                    ])
+                )
+            ))
+             ->then(function ($developers) {
+                 $fridge = new Fridge();
+                 $kataMaxibon = new KataMaxibon($fridge, new DummyChat());
+
+                 $kataMaxibon->grabMaxibonsInGroup($developers);
+
+                 $this->assertGreaterThan(2, $fridge->remainingMaxibons());
              });
     }
 }

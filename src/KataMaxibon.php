@@ -22,4 +22,12 @@ class KataMaxibon
         }
         return $numberOfMaxibons;
     }
+
+    public function grabMaxibonsInGroup(array $developers)
+    {
+        foreach ($developers as $developer){
+            $this->grabMaxibons($developer);
+        }
+
+    }
 }
