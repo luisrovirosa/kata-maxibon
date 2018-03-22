@@ -35,4 +35,25 @@ class KataMaxibonTest extends TestCase
                  $this->assertGreaterThan(2, $fridge->remainingMaxibons());
              });
     }
+
+    /**
+     * @test
+     */
+    public function ten_maxibons_are_automatically_bought_when_there_are_less_than_three()
+    {
+        $this->forAll(
+            Generator\names(),
+            Generator\choose(8, 10)
+        )
+             ->then(function ($name, $numberOfMaxibons) {
+                 $fridge = new Fridge();
+                 $chat = new DummyChat();
+                 $kataMaxibon = new KataMaxibon($fridge, $chat);
+                 $developer = new Developer($name, $numberOfMaxibons);
+
+                 $kataMaxibon->grabMaxibons($developer);
+
+                 $this->assertEquals(10 - $numberOfMaxibons + 10, $fridge->remainingMaxibons());
+             });
+    }
 }
