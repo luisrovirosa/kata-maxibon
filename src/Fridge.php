@@ -7,10 +7,15 @@ class Fridge
     /** @var int */
     private $numberOfRemainingMaxibons;
 
-    public function grabMaxibons(int $numberOfMaxibos): int
+    public function __construct()
     {
-        $this->numberOfRemainingMaxibons -= $numberOfMaxibos;
-        return $numberOfMaxibos;
+        $this->numberOfRemainingMaxibons = 10;
+    }
+
+    public function grabMaxibons(int $numberOfMaxibons): int
+    {
+        $this->numberOfRemainingMaxibons -= $numberOfMaxibons;
+        return $numberOfMaxibons;
     }
 
     public function addMaxibons(int $numberOfMaxibos): void
