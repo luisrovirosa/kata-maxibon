@@ -4,6 +4,7 @@ namespace Tests\LuisRovirosa\KataMaxibon;
 
 use Eris\Generator;
 use Eris\TestTrait;
+use LuisRovirosa\KataMaxibon\Chat;
 use LuisRovirosa\KataMaxibon\Developer;
 use LuisRovirosa\KataMaxibon\Fridge;
 use LuisRovirosa\KataMaxibon\KataMaxibon;
@@ -39,7 +40,7 @@ class KataMaxibonTest extends TestCase
     /**
      * @test
      */
-    public function ten_maxibons_are_automatically_bought_when_there_are_less_than_three()
+    public function ten_maxibons_are_automatically_bought_when_there_are_less_than_three_maxibons()
     {
         $this->forAll(
             Generator\names(),
@@ -54,6 +55,30 @@ class KataMaxibonTest extends TestCase
                  $kataMaxibon->grabMaxibons($developer);
 
                  $this->assertEquals(10 - $numberOfMaxibons + 10, $fridge->remainingMaxibons());
+             });
+    }
+
+    /**
+     * @test
+     */
+    public function a_message_is_sent_when_there_are_less_than_three_maxibons()
+    {
+        $this->forAll(
+            Generator\names(),
+            Generator\choose(8, 10)
+        )
+             ->then(function ($name, $numberOfMaxibons) {
+                 $fridge = new Fridge();
+                 $chatProphecy = $this->prophesize(Chat::class);
+                 /** @var Chat $chat */
+                 $chat = $chatProphecy->reveal();
+                 $kataMaxibon = new KataMaxibon($fridge, $chat);
+                 $developer = new Developer($name, $numberOfMaxibons);
+
+                 $expectedMessage = "Hi guys, I'm " . $name . ". We need more maxibons!";
+                 $chatProphecy->sendMessage($expectedMessage)->shouldBeCalled();
+
+                 $kataMaxibon->grabMaxibons($developer);
              });
     }
 }

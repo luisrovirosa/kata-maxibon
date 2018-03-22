@@ -18,7 +18,7 @@ class KataMaxibon
         $numberOfMaxibons = $this->fridge->grabMaxibons($developer->numberOfMaxibons());
         if ($this->fridge->remainingMaxibons() <= 2){
             $this->fridge->addMaxibons(10);
-            $this->chat->sendMessage("Hi guys, I'm {$developer->name()} . We need more maxibons!");
+            $this->chat->sendMessage("Hi guys, I'm {$developer->name()}. We need more maxibons!");
         }
         return $numberOfMaxibons;
     }
