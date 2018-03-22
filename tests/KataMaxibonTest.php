@@ -1,6 +1,6 @@
 <?php
 
-namespace LuisRovirosa\Tests;
+namespace Tests\LuisRovirosa\KataMaxibon;
 
 use Eris\Generator;
 use Eris\TestTrait;

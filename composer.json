@@ -9,8 +9,8 @@
   },
   "autoload": {
     "psr-4": {
-      "LuisRovirosa\\": "src",
-      "LuisRovirosa\\Tests\\": "tests"
+      "LuisRovirosa\\KataMaxibon\\": "src",
+      "Tests\\LuisRovirosa\\KataMaxibon\\": "tests"
     }
   }
 }
